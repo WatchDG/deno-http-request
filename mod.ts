@@ -7,10 +7,11 @@ type Response = {
 };
 
 export const request = async (
-  request: RequestInfo,
+  url: string,
+  requestInit: RequestInit,
 ): Promise<ResultOK<Response> | ResultFAIL<Error>> => {
   try {
-    const result = await fetch(request);
+    const result = await fetch(url, requestInit);
     if (!result.ok) return ResultFail(new Error("Request execution error."));
     const { status, headers } = result;
     if (headers.has("content-type")) {
