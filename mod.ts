@@ -12,14 +12,11 @@ export const request = async (
 ): Promise<ResultOK<Response> | ResultFAIL<Error>> => {
   try {
     const result = await fetch(url, requestInit);
-    if (!result.ok) return ResultFail(new Error("Request execution error."));
     const { status, headers } = result;
-    if (headers.has("content-type")) {
-      const body = await result.arrayBuffer();
-      return ResultOk({ status, headers, body });
-    } else {
-      return ResultOk({ status, headers });
-    }
+    const body = (headers.has("content-type"))
+      ? (await result.arrayBuffer())
+      : void 0;
+    return ResultOk({ status, headers, body });
   } catch (error) {
     return ResultFail(error);
   }
