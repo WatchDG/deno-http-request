@@ -1,4 +1,5 @@
-import { ResultFAIL, ResultFail, ResultOK, ResultOk } from "./deps.ts";
+import { fail, ok } from "./deps.ts";
+import type { TResultAsync } from "./deps.ts";
 
 type Response = {
   status: number;
@@ -9,15 +10,15 @@ type Response = {
 export const request = async (
   url: string,
   requestInit: RequestInit,
-): Promise<ResultOK<Response> | ResultFAIL<Error>> => {
+): TResultAsync<Response, Error> => {
   try {
     const result = await fetch(url, requestInit);
     const { status, headers } = result;
     const body = (headers.has("content-type"))
       ? (await result.arrayBuffer())
       : void 0;
-    return ResultOk({ status, headers, body });
+    return ok({ status, headers, body });
   } catch (error) {
-    return ResultFail(error);
+    return fail(error);
   }
 };
